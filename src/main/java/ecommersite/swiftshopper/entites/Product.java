@@ -37,4 +37,8 @@ public class Product {
 
     @Column(name = "Years")
     private short productWarrantyYears;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Categoryid", referencedColumnName = "ID")
+    private Category category;
 }
