@@ -1,11 +1,11 @@
 package ecommersite.swiftshopper.entites;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 
-@Getter @Setter @ToString
-@NoArgsConstructor @AllArgsConstructor
+@Getter @Setter
 @Entity @Table(name = "product")
 public class Product {
 
@@ -38,7 +38,8 @@ public class Product {
     @Column(name = "Years")
     private short productWarrantyYears;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Categoryid", referencedColumnName = "ID")
+    @JsonManagedReference
     private Category category;
 }

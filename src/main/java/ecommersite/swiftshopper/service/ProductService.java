@@ -13,6 +13,7 @@ public class ProductService
 
     public Product getProductById(Integer id)
     {
-        return productRepository.findById(id).orElse(null);
+        Product temp = productRepository.findById(id).orElse(null);
+        return temp;
     }
 }

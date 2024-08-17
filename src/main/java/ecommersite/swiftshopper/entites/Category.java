@@ -1,12 +1,12 @@
 package ecommersite.swiftshopper.entites;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
 
-@Getter @Setter @ToString
-@NoArgsConstructor @AllArgsConstructor
+@Getter @Setter
 @Entity @Table(name = "category")
 public class Category
 {
@@ -23,5 +23,6 @@ public class Category
 
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<Product> products;
 }
