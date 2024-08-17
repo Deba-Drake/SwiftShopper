@@ -1,5 +1,6 @@
 package ecommersite.swiftshopper.entites;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,6 +13,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
+
     private Integer productID; // The unique id of the product
 
     @Column(name = "Name")
@@ -41,5 +43,6 @@ public class Product {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Categoryid", referencedColumnName = "ID")
     @JsonManagedReference
+    @JsonIgnore
     private Category category;
 }
