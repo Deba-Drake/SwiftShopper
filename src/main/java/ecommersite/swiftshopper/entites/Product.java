@@ -1,7 +1,5 @@
 package ecommersite.swiftshopper.entites;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +11,6 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-
     private Integer productID; // The unique id of the product
 
     @Column(name = "Name")
@@ -21,6 +18,12 @@ public class Product {
 
     @Column(name = "Description")
     private String productDescription;
+
+    @Column(name = "Category")
+    private String productCategory;
+
+    @Column(name = "Brand")
+    private String productBrand;
 
     @Column(name = "Price")
     private double productPrice; // The price of the product (change as per region)
@@ -31,6 +34,9 @@ public class Product {
     @Column(name = "Quantity")
     private long productStockQuantity; // The quantity/units of product available at the moment
 
+    @Column(name = "Supplier")
+    private String productSupplier;
+
     @Column(name = "Refundable")
     private boolean productIsRefundable;
 
@@ -40,9 +46,6 @@ public class Product {
     @Column(name = "Years")
     private short productWarrantyYears;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Categoryid", referencedColumnName = "ID")
-    @JsonManagedReference
-    @JsonIgnore
-    private Category category;
+    @Column(name = "Available")
+    private boolean productIsAvailable = true;
 }

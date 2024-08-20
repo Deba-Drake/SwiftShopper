@@ -15,9 +15,9 @@ public class ProductService
     private ProductRepository productRepository;
 
     //Method to get Total Number of Products present in the table
-    public long getCountOfProducts()
+    public long getCountOfAvailableProducts()
     {
-        return productRepository.count();
+        return productRepository.availableProducts();
     }
 
     //Method to get all Products
@@ -29,33 +29,25 @@ public class ProductService
     //Method to get a Product by its ID
     public Product getProductById(Integer id)
     {
-        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
+        return productRepository.findById(id).orElse(null);
+    }
+
+    //Method to get a Product by its ID
+    public List<Product> findProductsByCategory(String category ) {
+        return productRepository.productsInCategory(category);
     }
 
     //Method to add a new Product
-    public void createProduct(Product product) {
-        productRepository.save(product);
+    public Product createProduct(Product product)
+    {
+        return productRepository.save(product);
     }
 
     //Method to delete a Product if exist
-    public void deleteProduct(Integer id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
-        productRepository.delete(product);
+    public void deleteProduct(Integer id)
+    {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        product.setProductIsAvailable(false);
+        productRepository.save(product);
     }
-
-    /*
-    public Product updateProduct(Integer productId, Product productDetails) {
-        Product existingProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-
-        existingProduct.setProductName(productDetails.getProductName());
-        existingProduct.setProductDescription(productDetails.getProductDescription());
-        // Set other fields as needed...
-
-        return productRepository.save(existingProduct);
-    }
-
-
-*/
 }

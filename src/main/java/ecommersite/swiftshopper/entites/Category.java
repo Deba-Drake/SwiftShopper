@@ -21,8 +21,6 @@ public class Category
     @Column(name = "Description")
     private String categoryDescription;
 
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
-    private List<Product> products;
+//    @Column(name = "Description")
+//    private List<Product> products;
 }
