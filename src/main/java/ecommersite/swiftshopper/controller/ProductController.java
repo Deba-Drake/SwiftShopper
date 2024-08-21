@@ -21,6 +21,16 @@ public class ProductController
         return productService.getCountOfAvailableProducts();
     }
 
+    @GetMapping("/instock-product")
+    public String inStockProducts(@PathVariable Integer id) {
+        return productService.findInStockProducts(id);
+    }
+
+    @GetMapping("/product-priceRange/{min},{max}")
+    public List<Product> productsInPriceRange(@PathVariable double minPrice, @PathVariable double maxPrice) {
+        return productService.findProductsByPriceRange(minPrice, maxPrice);
+    }
+
     @GetMapping("/count-product-category/{category}")
     public List<Product> productsInCategory(@PathVariable String category) {
         return productService.findProductsByCategory(category);
@@ -59,4 +69,12 @@ public class ProductController
     {
         productService.deleteProduct(id);
     }
+
+    @PutMapping(path = "/product/{id}")
+    public Product updateProduct(@PathVariable Integer id,@RequestBody Product productDetails)
+    {
+        Product existingProduct = productService.getProductById(id);
+        return productService.updateProduct(existingProduct,productDetails);
+    }
+
 }
