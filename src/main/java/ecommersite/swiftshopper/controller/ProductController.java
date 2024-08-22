@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ProductController
@@ -17,40 +18,27 @@ public class ProductController
     ProductService productService;
 
     @GetMapping("/count-product")
-    public long availableProducts() {
-        return productService.getCountOfAvailableProducts();
-    }
+    public long availableProducts() {return productService.getCountOfAvailableProducts();}
 
-    @GetMapping("/instock-product")
-    public String inStockProducts(@PathVariable Integer id) {
-        return productService.findInStockProducts(id);
-    }
+    @GetMapping("/instock-product/{id}")
+    public Optional<String> inStockProducts(@PathVariable Integer id) {return productService.findInStockProducts(id);}
 
-    @GetMapping("/product-priceRange/{min},{max}")
-    public List<Product> productsInPriceRange(@PathVariable double minPrice, @PathVariable double maxPrice) {
+    @GetMapping("/product-priceRange/{range}")
+    public Optional<List<Product>> getProductsByPriceRange(@PathVariable String range) {
+        String[] prices = range.split(",");
+        double minPrice = Double.parseDouble(prices[0]);
+        double maxPrice = Double.parseDouble(prices[1]);
         return productService.findProductsByPriceRange(minPrice, maxPrice);
     }
 
     @GetMapping("/count-product-category/{category}")
-    public List<Product> productsInCategory(@PathVariable String category) {
-        return productService.findProductsByCategory(category);
-    }
+    public Optional<List<Product>> productsInCategory(@PathVariable String category) {return productService.findProductsByCategory(category);}
 
     @GetMapping("/all-products")
-    public List<Product> allProducts()
-    {
-        return productService.getAllProducts();
-    }
+    public List<Product> allProducts() {return productService.getAllProducts();}
 
     @GetMapping("/product/{id}")
-    public Product sinlgeProduct(@PathVariable Integer id)
-    {
-        if (productService.getProductById(id)==null)
-        {
-            throw new ProductNotFoundException("Product " + id + " not found.");
-        }
-        else return productService.getProductById(id);
-    }
+    public Product singleProduct(@PathVariable Integer id) {return productService.getProductById(id).orElseThrow(() -> new ProductNotFoundException("Product " + id + " not found."));}
 
     @PostMapping("/create-product")
     public Product createProduct(@RequestBody Product product)
@@ -65,15 +53,12 @@ public class ProductController
     }
 
     @DeleteMapping(path = "/product/{id}")
-    public void deleteProduct(@PathVariable Integer id)
-    {
-        productService.deleteProduct(id);
-    }
+    public String deleteProduct(@PathVariable Integer id) {return productService.deleteProduct(id);}
 
     @PutMapping(path = "/product/{id}")
     public Product updateProduct(@PathVariable Integer id,@RequestBody Product productDetails)
     {
-        Product existingProduct = productService.getProductById(id);
+        Optional<Product> existingProduct = productService.getProductById(id);
         return productService.updateProduct(existingProduct,productDetails);
     }
 
