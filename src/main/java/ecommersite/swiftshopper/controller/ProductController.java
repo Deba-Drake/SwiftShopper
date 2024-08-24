@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class ProductController
@@ -21,10 +20,10 @@ public class ProductController
     public long availableProducts() {return productService.getCountOfAvailableProducts();}
 
     @GetMapping("/instock-product/{id}")
-    public Optional<String> inStockProducts(@PathVariable Integer id) {return productService.findInStockProducts(id);}
+    public String inStockProducts(@PathVariable Integer id) {return productService.findInStockProducts(id);}
 
     @GetMapping("/product-priceRange/{range}")
-    public Optional<List<Product>> getProductsByPriceRange(@PathVariable String range) {
+    public List<Product> getProductsByPriceRange(@PathVariable String range) {
         String[] prices = range.split(",");
         double minPrice = Double.parseDouble(prices[0]);
         double maxPrice = Double.parseDouble(prices[1]);
@@ -32,7 +31,7 @@ public class ProductController
     }
 
     @GetMapping("/count-product-category/{category}")
-    public Optional<List<Product>> productsInCategory(@PathVariable String category) {return productService.findProductsByCategory(category);}
+    public List<Product> productsInCategory(@PathVariable String category) {return productService.findProductsByCategory(category);}
 
     @GetMapping("/all-products")
     public List<Product> allProducts() {return productService.getAllProducts();}
@@ -56,10 +55,9 @@ public class ProductController
     public String deleteProduct(@PathVariable Integer id) {return productService.deleteProduct(id);}
 
     @PutMapping(path = "/product/{id}")
-    public Product updateProduct(@PathVariable Integer id,@RequestBody Product productDetails)
-    {
-        Optional<Product> existingProduct = productService.getProductById(id);
-        return productService.updateProduct(existingProduct,productDetails);
+    public Product updateProduct(@PathVariable Integer id, @RequestBody Product productDetails) {
+        Product existingProduct = productService.getProductById(id).orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
+        return productService.updateProduct(existingProduct, productDetails);
     }
 
 }
