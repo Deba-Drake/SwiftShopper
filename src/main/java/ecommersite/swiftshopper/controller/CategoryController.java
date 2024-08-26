@@ -1,6 +1,7 @@
 package ecommersite.swiftshopper.controller;
 
 import ecommersite.swiftshopper.entites.Category;
+import ecommersite.swiftshopper.exceptions.CategoryNameNullException;
 import ecommersite.swiftshopper.exceptions.CategoryNotFoundException;
 import ecommersite.swiftshopper.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,4 +26,17 @@ public class CategoryController
         return categoryService.getAllCategories();
     }
 
+    @PostMapping("/create-category")
+    public Category createCategory(@RequestBody Category category)
+    {
+        if (category.getCategoryName() == null || category.getCategoryName().trim().isEmpty()) throw new CategoryNameNullException("The Category Name cannot be Empty");
+        else if(category.getCategoryName() != null) return categoryService.createCategory(category);
+        else throw new RuntimeException("Unknown validation error occurred");
+    }
+
+    @DeleteMapping(path = "/product/{id}")
+    public String deleteCategory(@PathVariable Integer id)
+    {
+        return categoryService.deleteCategory(id);
+    }
 }

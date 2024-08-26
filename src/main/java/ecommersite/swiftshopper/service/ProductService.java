@@ -40,11 +40,11 @@ public class ProductService
     @Cacheable(value = "products", key = "#id")
     public Optional<Product> getProductById(Integer id) {return productRepository.findById(id);}
 
-    //Method to add a new Product
+    //Method to create a Product
     @CacheEvict(value = "allProducts", allEntries = true)
     public Product createProduct(Product product) {return productRepository.save(product);}
 
-    //Method to delete a Product if exist
+    //Method to delete a Product if it exists
     @CacheEvict(value = "products", key = "#id")
     public String deleteProduct(Integer id) {
         Optional<Product> currentProductOptional = getProductById(id);
@@ -59,7 +59,7 @@ public class ProductService
         else throw new ProductNotFoundException("The Product with ID: " + id + " was not found");
     }
 
-    //Method to update a Product if exist
+    //Method to update a Product if it exists
     @CacheEvict(value = "products", key = "#product.id")
     public Product updateProduct(Product existingProduct, Product productDetails) {
         existingProduct.setProductName(productDetails.getProductName());
