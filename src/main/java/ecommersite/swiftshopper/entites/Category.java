@@ -1,10 +1,7 @@
 package ecommersite.swiftshopper.entites;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 @Getter @Setter
 @Entity @Table(name = "category")
@@ -20,7 +17,4 @@ public class Category
 
     @Column(name = "Description")
     private String categoryDescription;
-
-//    @Column(name = "Description")
-//    private List<Product> products;
 }
