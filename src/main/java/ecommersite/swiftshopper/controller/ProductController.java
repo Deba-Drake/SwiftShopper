@@ -17,7 +17,10 @@ public class ProductController
     ProductService productService;
 
     @GetMapping("/count-product")
-    public long availableProducts() {return productService.getCountOfAvailableProducts();}
+    public long availableProducts()
+    {
+        return productService.getCountOfAvailableProducts();
+    }
 
     @GetMapping("/instock-product/{id}")
     public String inStockProducts(@PathVariable Integer id) {return productService.findInStockProducts(id);}

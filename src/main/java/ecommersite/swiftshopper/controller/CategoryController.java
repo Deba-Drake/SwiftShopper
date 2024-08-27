@@ -39,4 +39,16 @@ public class CategoryController
     {
         return categoryService.deleteCategory(id);
     }
+
+    @PutMapping(path = "/product/{id}")
+    public Category updateCategory(@PathVariable Integer id, @RequestBody Category categoryDetails) {
+        Category existingCategory = categoryService.getCategoryById(id).orElseThrow(() -> new CategoryNotFoundException("Category with ID " + id + " not found"));
+        return categoryService.updateCategory(existingCategory, categoryDetails);
+    }
+
+    @GetMapping("/count-product")
+    public long availableCategories()
+    {
+        return categoryService.getCountOfAvailableCategories();
+    }
 }

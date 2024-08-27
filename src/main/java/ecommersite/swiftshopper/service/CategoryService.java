@@ -1,9 +1,7 @@
 package ecommersite.swiftshopper.service;
 
 import ecommersite.swiftshopper.entites.Category;
-import ecommersite.swiftshopper.entites.Product;
 import ecommersite.swiftshopper.exceptions.CategoryNotFoundException;
-import ecommersite.swiftshopper.exceptions.ProductNotFoundException;
 import ecommersite.swiftshopper.repos.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -53,5 +51,20 @@ public class CategoryService
             return "Category with ID: " + id + " has been marked as deleted.";
         }
         else throw new CategoryNotFoundException("The Category with ID: " + id + " was not found");
+    }
+
+    @CacheEvict(value = "categories", allEntries = true)
+    public Category updateCategory(Category existingCategory, Category categoryDetails)
+    {
+        existingCategory.setCategoryName(categoryDetails.getCategoryName());
+        existingCategory.setCategoryDescription(categoryDetails.getCategoryDescription());
+        existingCategory.setCategoryIsAvailable(categoryDetails.isCategoryIsAvailable());
+        return categoryRepository.save(existingCategory);
+    }
+
+    //Method to get Total Number of Products present in the table
+    public long getCountOfAvailableCategories()
+    {
+        return categoryRepository.availableCategories();
     }
 }
