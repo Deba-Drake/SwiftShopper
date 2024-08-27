@@ -34,19 +34,19 @@ public class CategoryController
         else throw new RuntimeException("Unknown validation error occurred");
     }
 
-    @DeleteMapping(path = "/product/{id}")
+    @DeleteMapping(path = "/category/{id}")
     public String deleteCategory(@PathVariable Integer id)
     {
         return categoryService.deleteCategory(id);
     }
 
-    @PutMapping(path = "/product/{id}")
+    @PutMapping(path = "/category/{id}")
     public Category updateCategory(@PathVariable Integer id, @RequestBody Category categoryDetails) {
         Category existingCategory = categoryService.getCategoryById(id).orElseThrow(() -> new CategoryNotFoundException("Category with ID " + id + " not found"));
         return categoryService.updateCategory(existingCategory, categoryDetails);
     }
 
-    @GetMapping("/count-product")
+    @GetMapping("/count-category")
     public long availableCategories()
     {
         return categoryService.getCountOfAvailableCategories();
