@@ -5,8 +5,11 @@ import ecommersite.swiftshopper.exceptions.ProductNameNullException;
 import ecommersite.swiftshopper.exceptions.ProductNotFoundException;
 import ecommersite.swiftshopper.exceptions.ProductPriceNullException;
 import ecommersite.swiftshopper.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -15,6 +18,12 @@ public class ProductController
 {
     @Autowired
     ProductService productService;
+
+    @GetMapping("/csrf_token")
+    public CsrfToken getCRSFToken(HttpServletRequest request)
+    {
+        return (CsrfToken) request.getAttribute("_csrf");
+    }
 
     @GetMapping("/count-product")
     public long availableProducts()

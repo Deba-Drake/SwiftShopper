@@ -29,23 +29,22 @@ public class ProductService
     public List<Product> findProductsByPriceRange(double minPrice, double maxPrice) {return Optional.ofNullable(productRepository.findProductsBetweenPrice(minPrice, maxPrice)).orElse(Collections.emptyList());}
 
     //Method to get a Product by its ID
-    @Cacheable(value = "productsInCategory")
+    //@Cacheable(value = "productsInCategory")
     public List<Product> findProductsByCategory(String category) {return Optional.ofNullable(productRepository.productsInCategory(category)).orElse(Collections.emptyList());}
 
     //Method to get all Products
-    @Cacheable(value = "allProducts")
     public List<Product> getAllProducts() {return productRepository.findAll();}
 
     //Method to get a Product by its ID
-    @Cacheable(value = "products", key = "#id")
+    //@Cacheable(value = "products", key = "#id")
     public Optional<Product> getProductById(Integer id) {return productRepository.findById(id);}
 
     //Method to create a Product
-    @CacheEvict(value = "allProducts", allEntries = true)
+    //@CacheEvict(value = "allProducts", allEntries = true)
     public Product createProduct(Product product) {return productRepository.save(product);}
 
     //Method to delete a Product if it exists
-    @CacheEvict(value = "products", key = "#id")
+    //@CacheEvict(value = "products", key = "#id")
     public String deleteProduct(Integer id) {
         Optional<Product> currentProductOptional = getProductById(id);
 
@@ -60,7 +59,7 @@ public class ProductService
     }
 
     //Method to update a Product if it exists
-    @CacheEvict(value = "products", key = "#product.id")
+    //@CacheEvict(value = "products", key = "#product.id")
     public Product updateProduct(Product existingProduct, Product productDetails) {
         existingProduct.setProductName(productDetails.getProductName());
         existingProduct.setProductPrice(productDetails.getProductPrice());
