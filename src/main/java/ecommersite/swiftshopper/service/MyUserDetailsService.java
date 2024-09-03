@@ -2,6 +2,7 @@ package ecommersite.swiftshopper.service;
 
 import ecommersite.swiftshopper.entites.MyUserDetail;
 import ecommersite.swiftshopper.entites.User;
+import ecommersite.swiftshopper.exceptions.UserNotFoundException;
 import ecommersite.swiftshopper.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,10 +19,12 @@ public class MyUserDetailsService implements UserDetailsService
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
-        User user = userRepository.findByFullName("John Doe");
+        User user = userRepository.findByFullName(username);
 
-        if(user == null) throw new UsernameNotFoundException("User not Found");
-
-        return new MyUserDetail(user);
+        if(user == null)
+        {
+            throw new UserNotFoundException("User not Found");
+        }
+        else return new MyUserDetail(user);
     }
 }

@@ -15,34 +15,37 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UserID")
+    @Column(name = "user_id")
     private Integer userID; // The unique id of the user
 
-    @Column(name = "FirstName", nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "LastName", nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "Email", nullable = false, unique = true)
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email; // The primary email address
 
-    @Column(name = "AlternateEmail", unique = true)
+    @Column(name = "alternate_mail", unique = true)
     private String alternateEmail; // Optional secondary email address
 
-    @Column(name = "Password", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password; // The user's password (should be hashed)
 
-    @Column(name = "PhoneNumber")
+    @Column(name = "phone_number")
     private String phoneNumber; // The user's phone number
 
-    @Column(name = "Location")
+    @Column(name = "location")
     private String location; // The user's location (city, state, etc.)
 
-    @Column(name = "Created", updatable = false)
+    @Column(name = "created", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now(); // Timestamp for when the user was created
 
-    @Column(name = "Updated")
+    @Column(name = "updated")
     private LocalDateTime updatedAt = LocalDateTime.now(); // Timestamp for the last update
 
     @PrePersist
