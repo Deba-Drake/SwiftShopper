@@ -4,7 +4,6 @@ import ecommersite.swiftshopper.entites.User;
 import ecommersite.swiftshopper.exceptions.UserNotFoundException;
 import ecommersite.swiftshopper.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +21,9 @@ public class UserService
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    JWTService jwtService;
+
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 
     public List<User> getAllUsers()
@@ -35,12 +37,12 @@ public class UserService
         return userRepository.save(user);
     }
 
-    public User loginUser(User user)
+    public String loginUser(User user)
     {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getFullName(), user.getPassword()));
 
-        if (authentication.isAuthenticated()) return user;
+        if (authentication.isAuthenticated()) return jwtService.generateToken(user.getFullName());
         else throw new UserNotFoundException("User Not Found");
     }
 }
