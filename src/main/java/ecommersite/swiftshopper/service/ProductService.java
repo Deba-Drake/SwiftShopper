@@ -1,5 +1,7 @@
 package ecommersite.swiftshopper.service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 import ecommersite.swiftshopper.entites.Product;
 import ecommersite.swiftshopper.exceptions.ProductNotFoundException;
 import ecommersite.swiftshopper.repos.ProductRepository;
@@ -7,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService
@@ -68,5 +72,20 @@ public class ProductService
         existingProduct.setProductIsReturnable(productDetails.isProductIsReturnable());
         existingProduct.setProductIsAvailable(productDetails.isProductIsAvailable());
         return productRepository.save(existingProduct);
+    }
+
+    @Autowired
+    private ElasticsearchClient elasticsearchClient;
+
+    public List<Product> searchProductsByCategoryName(String categoryName) throws IOException {
+        SearchResponse<Product> searchResponse = elasticsearchClient.search(s -> s
+                        .index("products") // Your Elasticsearch index
+                        .query(q -> q.match(m -> m.field("category.name").query(categoryName))),
+                Product.class
+        );
+
+        return searchResponse.hits().hits().stream()
+                .map(Hit::source)
+                .collect(Collectors.toList());
     }
 }
