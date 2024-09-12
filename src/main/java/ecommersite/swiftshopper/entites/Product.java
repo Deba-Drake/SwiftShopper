@@ -10,7 +10,6 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.io.Serializable;
 import java.util.List;
 
-@Data
 @Getter @Setter
 @Entity
 @Table(name = "product")

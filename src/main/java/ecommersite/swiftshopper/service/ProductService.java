@@ -4,6 +4,7 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import ecommersite.swiftshopper.entites.Product;
 import ecommersite.swiftshopper.exceptions.ProductNotFoundException;
+import ecommersite.swiftshopper.repos.ProductElasticsearchRepository;
 import ecommersite.swiftshopper.repos.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -26,7 +27,7 @@ public class ProductService
     public long getCountOfAvailableProducts() {return productRepository.availableProducts();}
 
     //Method to check by ID that if a Product is In-Stock
-    @Cacheable(value = "products", key = "#id")
+    //@Cacheable(value = "products", key = "#id")
     public String findInStockProducts(Integer id) {return productRepository.findById(id).map(product -> product.getProductStockQuantity() > 0 ? "The Product with ID: " + id + " is In-Stock with Quantity: " + product.getProductStockQuantity() : "The Product with ID: " + id + " is Not In-Stock").orElseThrow(() -> new ProductNotFoundException("Product not found"));}
 
     //Method to get the Products in a Price Range
@@ -75,12 +76,23 @@ public class ProductService
     }
 
     @Autowired
-    private ElasticsearchClient elasticsearchClient;
+    private ProductElasticsearchRepository productElasticsearchRepository; // Elasticsearch repository
+
+    @Autowired
+    private ElasticsearchClient elasticsearchClient; // Elasticsearch client
+
+    // Method to delete a Product using ElasticsearchClient
+    public void deleteProductFromElasticsearch(Integer id) throws IOException {
+        elasticsearchClient.delete(d -> d
+                .index("products")
+                .id(id.toString())
+        );
+    }
 
     public List<Product> searchProductsByCategoryName(String categoryName) throws IOException {
         SearchResponse<Product> searchResponse = elasticsearchClient.search(s -> s
                         .index("products") // Your Elasticsearch index
-                        .query(q -> q.match(m -> m.field("category.name").query(categoryName))),
+                        .query(q -> q.match(m -> m.field("productCategory").query(categoryName))),
                 Product.class
         );
 
@@ -88,4 +100,5 @@ public class ProductService
                 .map(Hit::source)
                 .collect(Collectors.toList());
     }
+
 }
